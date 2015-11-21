@@ -8,21 +8,75 @@
 
 import UIKit
 
+
 class pokemonDetailsVC: UIViewController {
     var pokemon: Pokemon!
+    
+    @IBOutlet weak var nameLbl: UILabel!
+    @IBOutlet weak var pokeImg: UIImageView!
+    @IBOutlet weak var pokeTextDesc: UILabel!
+    @IBOutlet weak var type: UILabel!
+    @IBOutlet weak var height: UILabel!
+    @IBOutlet weak var weight: UILabel!
+    @IBOutlet weak var defense: UILabel!
+    @IBOutlet weak var ID: UILabel!
+    @IBOutlet weak var attack: UILabel!
+    @IBOutlet weak var nextEvoText: UILabel!
+    @IBOutlet weak var currentEvo: UIImageView!
+    @IBOutlet weak var nextEvo: UIImageView!
+    
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        nameLbl.text = pokemon.name
+        pokeImg.image = UIImage(named: "\(pokemon.ID)")
+        
+        pokemon.downloadedPokemonDetails { () -> () in
+            //this will be called after downloading is done. If not called program will crash.
+           self.downloadPokemonDetails()
+        }
+           }
 
-       fakeData.text = pokemon.name
-    
+    func downloadPokemonDetails() {
+        pokeTextDesc.text = pokemon.description
+        type.text = pokemon.type
+        height.text = pokemon.height
+        weight.text = pokemon.weight
+        defense.text = pokemon.defense
+        ID.text = "\(pokemon.ID)"
+        attack.text = pokemon.attack
+        
+        currentEvo.image = UIImage(named: "\(pokemon.ID)")
+        if pokemon.nextEvolutionId == "" {
+            nextEvoText.text = "No Evolution"
+            nextEvo.hidden = true
+        } else {
+            nextEvo.hidden = false
+            nextEvo.image = UIImage(named: pokemon.nextEvolutionId)
+            var str = "Next Evolution is: \(pokemon.nextEvolutionTxt)"
+            
+            if pokemon.nextEvolutionLvl != "" {
+              str += "LVL \(pokemon.nextEvolutionLvl)"
+                nextEvoText.text = "\(str)"
+                
+            }
+
+        }
+        
     }
 
-    @IBOutlet weak var fakeData: UILabel!
+
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
+    @IBAction func backButton(sender: AnyObject) {
+        dismissViewControllerAnimated(true, completion: nil)
+    }
 
     /*
     // MARK: - Navigation
